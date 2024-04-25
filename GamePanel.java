@@ -15,10 +15,14 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private final JLabel[] labels = new JLabel[81]; // tiles
     private final int[] surroundings = {-1, 10, -8, 9, 1, 8, -9, -10}; // to be summed to indexes to check the adjacent tiles
     private final ImageIcon flag, clickable, mine, clicked_mine,empty,one,two,three,four,five,six,seven,eight;
-    private FlagPanel flagPanel;
+    private FlagPanel flagpanel;
+    private StopwatchPanel stopwatch;
+    private boolean gamestarted;
     public GamePanel(){
         flags = 10;
-        this.flagPanel = new FlagPanel();
+        flagpanel = new FlagPanel();
+        this.stopwatch = new StopwatchPanel();
+        boolean gamestarted = false;
         // panel setup
         this.setLayout(new GridLayout(9,9));
         this.setBackground(Color.BLACK);
@@ -128,6 +132,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
 
     // when mine is found
     private void gameOver(int i){
+        stopwatch.stop();
         labels[i].setIcon(clicked_mine);
         for(int l:locations){
             if(l!=i){
@@ -140,11 +145,16 @@ public final class GamePanel extends JPanel  implements MouseListener {
     }
     // check winning conditions
     private boolean win(){
+
         if (flags == 0){
             for( int j = 0; j<81; j++){
                 if (!locations.contains(j) && labels[j].getIcon()== clickable){
                     return false;
                 }
+            }
+            stopwatch.stop();
+            for(int l:locations){
+                labels[l].setIcon(mine);
             }
             return true;
         }
@@ -155,8 +165,12 @@ public final class GamePanel extends JPanel  implements MouseListener {
     }
 
     public FlagPanel getFlagPanel() {
-        return flagPanel;
+        return flagpanel;
     }
+    public StopwatchPanel getStopwatch(){
+        return stopwatch;
+    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -165,6 +179,11 @@ public final class GamePanel extends JPanel  implements MouseListener {
         if(SwingUtilities.isLeftMouseButton(e)){
             for(int i = 0; i < 81; i++){
                 if(e.getSource() == labels[i]){
+                    win();
+                    if(!gamestarted){
+                        stopwatch.start();
+                        gamestarted  = true;
+                }
                     if(locations.contains(i)){
                         gameOver(i);
                     }
@@ -179,23 +198,46 @@ public final class GamePanel extends JPanel  implements MouseListener {
         else if(SwingUtilities.isRightMouseButton(e)){
             for(int i = 0; i < 81; i++) {
                 if (e.getSource() == labels[i]) {
+                    win();
+                    if(!gamestarted){
+                        stopwatch.start();
+                        gamestarted  = true;
+                    }
                     if (labels[i].getIcon() == flag){
                         labels[i].setIcon(clickable);
                         flags++;
-                        flagPanel.setFlag1(flags);
-                        flagPanel.setFlag2(flags);
+                        String digits = Integer.toString(flags);
+                        switch(digits.length()){
+                            case 2:
+                            flagpanel.setLabel1('0');
+                            flagpanel.setLabel2('1');
+                            break;
+                            case 1:
+                                flagpanel.setLabel1(digits.charAt(0));
+                                flagpanel.setLabel2('-');
+                                break;
+                        }
+
                     }
                     else{
                         if(!(flags <= 0)){
                             labels[i].setIcon(flag);
                             flags--;
-                            flagPanel.setFlag1(flags);
-                            flagPanel.setFlag2(flags);
+                            String digits = Integer.toString(flags);
+                            switch(digits.length()){
+                                case 2:
+                                    flagpanel.setLabel1('0');
+                                    flagpanel.setLabel2('1');
+                                    break;
+                                case 1:
+                                    flagpanel.setLabel1(digits.charAt(0));
+                                    flagpanel.setLabel2('-');
+                                    break;
+                            }
                         }
                     }
 
                 }
-
             }
         }
     }
