@@ -50,4 +50,12 @@ public class StopwatchPanel extends NumberPanel{
     public void stop() {
         timer.stop();
     }
+    public void reset(){
+        elapsedTime = 0;
+        seconds = 0;
+        time = "";
+        label1.setIcon(none);
+        label2.setIcon(none);
+        label3.setIcon(none);
+    }
 }

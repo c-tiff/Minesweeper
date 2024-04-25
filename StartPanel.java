@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class StartPanel extends JPanel implements ActionListener {
-    ImageIcon smile, sad, cool;
-    JButton smiley;
+public class StartPanel extends JPanel implements MouseListener {
+    ImageIcon smilepressed, smile, sad, cool;
+    JLabel smiley;
 
     JPanel top;
     JFrame frame;
@@ -22,31 +24,65 @@ public class StartPanel extends JPanel implements ActionListener {
             smile = new ImageIcon(new ImageIcon("images/smile.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
             sad = new ImageIcon(new ImageIcon("images/sad.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
             cool = new ImageIcon(new ImageIcon("images/cool.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+            smilepressed =  new ImageIcon(new ImageIcon("images/smilepressed.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 
-            smiley = new JButton();
+
+        smiley = new JLabel();
             smiley.setSize(50, 50);
             smiley.setIcon(smile);
-            smiley.addActionListener(this);
+            smiley.addMouseListener(this);
             smiley.setSize(50, 50);
             this.add(smiley);
 
     }
+    public void setSmiley(int i){
+        switch(i){
+            case 0:
+                smiley.setIcon(smile);
+                break;
+            case 1:
+                smiley.setIcon(sad);
+                break;
+            case 2:
+                smiley.setIcon(cool);
+        }
+
+    }
+
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void mouseClicked(MouseEvent e) {
         if (e.getSource() == smiley) {
-            top.remove(game.getFlagPanel());
-            top.remove(smiley);
-            top.remove(game.getStopwatch());
             frame.remove(game);
-            game = new GamePanel();
+            frame.remove(top);
+            game = new GamePanel(frame);
+            top = new TopPanel(game);
             frame.add(game, BorderLayout.SOUTH);
-            top.add(game.getFlagPanel());
-            top.add(smiley);
-            top.add(game.getStopwatch());
+            frame.add(top,BorderLayout.NORTH);
+
             SwingUtilities.updateComponentTreeUI(top);
             SwingUtilities.updateComponentTreeUI(frame);
 
         }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        smiley.setIcon(smilepressed);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        smiley.setIcon(smile);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
