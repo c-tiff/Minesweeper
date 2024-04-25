@@ -56,7 +56,7 @@ public class StartPanel extends JPanel implements MouseListener {
             frame.remove(game);
             frame.remove(top);
             game = new GamePanel(frame);
-            top = new TopPanel(game);
+            top = new TopPanel(frame, game);
             frame.add(game, BorderLayout.SOUTH);
             frame.add(top,BorderLayout.NORTH);
 

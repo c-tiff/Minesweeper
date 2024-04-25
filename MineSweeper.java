@@ -9,10 +9,9 @@ public class MineSweeper {
     private ImageIcon icon = new ImageIcon("images/logo.png");
     private ImageIcon smile, sad, cool;
     private JFrame window;
-    // private TopPanel top;
     private GamePanel game;
 
-    private JPanel topPanel;
+    private TopPanel topPanel;
     private StartPanel startPanel;
 
     public MineSweeper() {
@@ -26,18 +25,11 @@ public class MineSweeper {
         window.setLayout(new BorderLayout());
         window.setIconImage(icon.getImage());
 
-        game = new GamePanel();
+        game = new GamePanel(window);
         // top panel initialization
-        // top = new TopPanel(window, game);
         // game panel initialization
 
-        topPanel = new JPanel();
-        startPanel = new StartPanel(window,topPanel, game);
-        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
-
-        topPanel.add(game.getFlagPanel());
-        topPanel.add(startPanel);
-        topPanel.add(game.getStopwatch());
+        topPanel = new TopPanel(window,game);
         // add panels to window
         window.add(topPanel, BorderLayout.NORTH);
         window.add(game, BorderLayout.SOUTH);

@@ -18,10 +18,13 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private FlagPanel flagpanel;
     private StopwatchPanel stopwatch;
     private boolean gamestarted;
-    public GamePanel(){
+    private JFrame frame;
+    private TopPanel top;
+    public GamePanel(JFrame frame){
+        this.frame = frame;
         flags = 10;
         flagpanel = new FlagPanel();
-        this.stopwatch = new StopwatchPanel();
+        stopwatch = new StopwatchPanel();
         boolean gamestarted = false;
         // panel setup
         this.setLayout(new GridLayout(9,9));
@@ -170,7 +173,6 @@ public final class GamePanel extends JPanel  implements MouseListener {
     public StopwatchPanel getStopwatch(){
         return stopwatch;
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
