@@ -18,10 +18,5 @@ public class FlagPanel extends NumberPanel{
         this.add(label2);
         this.add(label1);
     }
-    public void reset(){
-        label1.setIcon(zero);
-        label2.setIcon(uno);
-        label3.setIcon(none);
-    }
 }
 

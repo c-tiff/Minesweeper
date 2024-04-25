@@ -18,10 +18,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private FlagPanel flagpanel;
     private StopwatchPanel stopwatch;
     private boolean gamestarted;
-    private JFrame frame;
-    private TopPanel top;
     public GamePanel(JFrame frame){
-        this.frame = frame;
         flags = 10;
         flagpanel = new FlagPanel();
         stopwatch = new StopwatchPanel();
@@ -65,23 +62,20 @@ public final class GamePanel extends JPanel  implements MouseListener {
     }
     // check adjacent tiles and set value to current tile
     private void check(int i){
-        if(!locations.contains(i)){
+        if(!locations.contains(i)) {
             int amount = getAmount(i);
-            switch(amount){
+            switch (amount) {
                 default:
                     labels[i].setIcon(empty);
-                    for(int j:surroundings){
-                        if((i<9 || i>71) && (j==8 || j==-8)){
+                    for (int j : surroundings) {
+                        if ((i + 1) % 9 == 0 && (j == 1 || j == -8 || j == 10)) {
                             continue;
                         }
-                        if((i+1)%9 == 0 && (j==1 || j == -8 || j == 10)){
+                        if (i % 9 == 0 && (j == -1 || j == 8 || j == -10)) {
                             continue;
                         }
-                        if(i %9==0 && (j == -1 || j == 8 || j == -10)){
-                            continue;
-                        }
-                        if(i+j<= 81 && i+j>=0){
-                            check(i+j);
+                        if (i + j <= 81 && i + j >= 0) {
+                            check(i + j);
                         }
                     }
                     break;
@@ -117,16 +111,13 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private int getAmount(int i) {
         int amount = 0;
         for(int j: surroundings){
-            if((i <9 || i >71) && (j==8 || j==-8)){
+            if((i+1)%9 == 0 && (j==1 || j == -8 || j == 10)){
                 continue;
             }
-            if((i +1)%9 == 0 && (j==1 || j == -8 || j == 10)){
+            if((((i) % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
                 continue;
             }
-            if(((i % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
-                continue;
-            }
-            if(locations.contains(i +j)){
+            if(locations.contains(i+j)){
                 amount++;
             }
         }
