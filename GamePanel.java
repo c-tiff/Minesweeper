@@ -8,27 +8,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public final class GamePanel extends JPanel  implements MouseListener {
-    // screen settings
-    private int flags;
-    private Random rand = new Random();
-    private ArrayList<Integer> locations =  new ArrayList<>(); // positions of mines
-    private final JLabel[] labels = new JLabel[81]; // tiles
-    private final int[] surroundings = {-1, 10, -8, 9, 1, 8, -9, -10}; // to be summed to indexes to check the adjacent tiles
     private final ImageIcon flag, clickable, mine, clicked_mine,empty,one,two,three,four,five,six,seven,eight;
-    private FlagPanel flagpanel;
-    private StopwatchPanel stopwatch;
-    private boolean gamestarted;
-    private MineSweeper minesweeper;
-    public GamePanel(MineSweeper minesweeper){
-        this.minesweeper = minesweeper;
-        flags = 10;
-        flagpanel = new FlagPanel();
-        stopwatch = new StopwatchPanel();
-        boolean gamestarted = false;
-        // panel setup
-        this.setLayout(new GridLayout(9,9));
-        this.setBackground(Color.BLACK);
+    private final Random rand = new Random();
+    private int flags; // number of flags available
+    private boolean gamestarted; // "is game started?" condition for stopwatch
+    private final FlagPanel flagpanel;
+    private final StopwatchPanel stopwatch;
+    private final MineSweeper minesweeper;
 
+    private final ArrayList<Integer> locations =  new ArrayList<>(); // positions of mines
+    private final JLabel[] labels = new JLabel[81]; // tiles
+    private final int[] surroundings = {-10,-9,-8,-1,1,8,9,10}; // to be summed to indexes to check the adjacent tiles
+
+    public GamePanel(MineSweeper minesweeper){
         //sprites
         flag = new ImageIcon(new ImageIcon("images/flag.png").getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT));
         clickable = new ImageIcon(new ImageIcon("images/clickablecell.png").getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT));
@@ -43,6 +35,17 @@ public final class GamePanel extends JPanel  implements MouseListener {
         six = new ImageIcon(new ImageIcon("images/six.png").getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT));
         seven = new ImageIcon(new ImageIcon("images/seven.png").getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT));
         eight= new ImageIcon(new ImageIcon("images/eight.png").getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT));
+
+        // panel setup
+        this.setLayout(new GridLayout(9,9));
+        this.setBackground(Color.BLACK);
+
+        // initializations
+        this.minesweeper = minesweeper;
+        flags = 10;
+        flagpanel = new FlagPanel();
+        stopwatch = new StopwatchPanel();
+        boolean gamestarted = false;
 
         // making the individual tiles
         for(int i = 0; i<81; i++){
@@ -62,7 +65,24 @@ public final class GamePanel extends JPanel  implements MouseListener {
             locations.add(rand.nextInt(81));
         }
     }
+
     // check adjacent tiles and set value to current tile
+
+    private int getAmount(int i) {
+        int amount = 0;
+        for(int j: surroundings){
+            if((i+1)%9 == 0 && ((j==1) || (j == -8) || (j == 10))){
+                continue;
+            }
+            if(((i % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
+                continue;
+            }
+            if(locations.contains(i+j)){
+                amount++;
+            }
+        }
+        return amount;
+    }
     private void check(int i){
         if(!locations.contains(i)) {
             int amount = getAmount(i);
@@ -75,10 +95,10 @@ public final class GamePanel extends JPanel  implements MouseListener {
                             continue;
                         }
                         // left border
-                        if (i % 9 == 0 && (j == -1 || j == 8 || j == -10)) {
+                        if ((i % 9) == 0 && (j == -1 || j == 8 || j == -10)) {
                             continue;
                         }
-                        if ((i + j) <= 81 && (i + j) >= 0) {
+                        if ((i + j) <= 80 && (i + j) >= 0) {
                             check(i + j);
                         }
                     }
@@ -112,36 +132,25 @@ public final class GamePanel extends JPanel  implements MouseListener {
         }
     }
 
-    private int getAmount(int i) {
-        int amount = 0;
-        for(int j: surroundings){
-            if((i+1)%9 == 0 && ((j==1) || (j == -8) || (j == 10))){
-                continue;
+
+    // check game over conditions and implementation
+    private void gameOver(int i){
+        if(locations.contains(i)){
+            stopwatch.stop();
+            minesweeper.getStartPanel().setSmiley(1);
+            labels[i].setIcon(clicked_mine);
+            for(int l:locations){
+                if(l!=i){
+                    labels[l].setIcon(mine);
+                }
             }
-            if(((i % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
-                continue;
-            }
-            if(locations.contains(i+j)){
-                amount++;
+            for(int k = 0;k<81;k++){
+                labels[k].removeMouseListener(this);
             }
         }
-        return amount;
+
     }
 
-    // when mine is found
-    private void gameOver(int i){
-        stopwatch.stop();
-        minesweeper.getStartPanel().setSmiley(1);
-        labels[i].setIcon(clicked_mine);
-        for(int l:locations){
-            if(l!=i){
-                labels[l].setIcon(mine);
-            }
-        }
-        for(int k = 0;k<81;k++){
-            labels[k].removeMouseListener(this);
-        }
-    }
     // check winning conditions
     private void win(){
         if (flags == 0){
@@ -162,6 +171,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
         }
     }
 
+    // getters
     public FlagPanel getFlagPanel() {
         return flagpanel;
     }
@@ -169,21 +179,19 @@ public final class GamePanel extends JPanel  implements MouseListener {
         return stopwatch;
     }
 
+    // when a tile i clicked:
     @Override
     public void mouseClicked(MouseEvent e) {
-        // left and right click differentiation only works with labels and not buttons !!!
         // left mouse to reveal a tile
         if(SwingUtilities.isLeftMouseButton(e)){
             for(int i = 0; i < 81; i++){
                 if(e.getSource() == labels[i]){
                     win();
+                    gameOver(i);
                     if(!gamestarted){
                         stopwatch.start();
                         gamestarted  = true;
                 }
-                    if(locations.contains(i)){
-                        gameOver(i);
-                    }
                     else{
                         check(i);
                     }
