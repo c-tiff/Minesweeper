@@ -11,12 +11,10 @@ public class MineSweeper {
     private JFrame window;
     private GamePanel game;
     private StartPanel startPanel;
-    private FlagPanel flag;
-    private StopwatchPanel stopwatch;
     private TopPanel topPanel;
 
     public MineSweeper() {
-        // game frame implementation
+        // frame implementation
         window = new JFrame();
         window.setTitle("Minesweeper");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,17 +24,16 @@ public class MineSweeper {
         window.setLayout(new BorderLayout());
         window.setIconImage(icon.getImage());
 
-        game = new GamePanel(this);
-        // top panel initialization
-        // game panel initialization
 
+        // game panel
+        game = new GamePanel(this);
+
+        // top panel & start panel
         topPanel = new TopPanel();
-        stopwatch = game.getStopwatch();
-        flag = game.getFlagPanel();
-        startPanel = new StartPanel(this,topPanel,game);
-        topPanel.add(flag);
+        startPanel = new StartPanel(this);
+        topPanel.add(game.getFlagPanel());
         topPanel.add(startPanel);
-        topPanel.add(stopwatch);
+        topPanel.add(game.getStopwatch());
 
         // add panels to window
         window.add(topPanel, BorderLayout.NORTH);
@@ -45,6 +42,10 @@ public class MineSweeper {
         window.pack();
         window.setVisible(true);
     }
+
+    // getters
+    public GamePanel getGame() { return game; }
+    public TopPanel getTopPanel() { return topPanel;}
     public StartPanel getStartPanel(){
         return startPanel;
     }

@@ -16,11 +16,11 @@ public class StartPanel extends JPanel implements MouseListener {
     GamePanel game;
 
     MineSweeper minesweeper;
-    public StartPanel(MineSweeper minesweeper,JPanel top, GamePanel game){
+    public StartPanel(MineSweeper minesweeper){
             this.minesweeper = minesweeper;
             this.frame = minesweeper.getWindow();
-            this.game = game;
-            this.top = top;
+            this.game = minesweeper.getGame();
+            this.top = minesweeper.getTopPanel();
             //panel setup
             // start button icons
             smile = new ImageIcon(new ImageIcon("images/smile.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
