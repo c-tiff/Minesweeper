@@ -18,7 +18,9 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private FlagPanel flagpanel;
     private StopwatchPanel stopwatch;
     private boolean gamestarted;
-    public GamePanel(JFrame frame){
+    private MineSweeper minesweeper;
+    public GamePanel(MineSweeper minesweeper){
+        this.minesweeper = minesweeper;
         flags = 10;
         flagpanel = new FlagPanel();
         stopwatch = new StopwatchPanel();
@@ -68,13 +70,15 @@ public final class GamePanel extends JPanel  implements MouseListener {
                 default:
                     labels[i].setIcon(empty);
                     for (int j : surroundings) {
-                        if ((i + 1) % 9 == 0 && (j == 1 || j == -8 || j == 10)) {
+                        // right border
+                        if ((i + 1) % 9 == 0 && (j == 1 || j == -8 || j == 10)){
                             continue;
                         }
+                        // left border
                         if (i % 9 == 0 && (j == -1 || j == 8 || j == -10)) {
                             continue;
                         }
-                        if (i + j <= 81 && i + j >= 0) {
+                        if ((i + j) <= 81 && (i + j) >= 0) {
                             check(i + j);
                         }
                     }
@@ -111,10 +115,10 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private int getAmount(int i) {
         int amount = 0;
         for(int j: surroundings){
-            if((i+1)%9 == 0 && (j==1 || j == -8 || j == 10)){
+            if((i+1)%9 == 0 && ((j==1) || (j == -8) || (j == 10))){
                 continue;
             }
-            if((((i) % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
+            if(((i % 9) == 0) && ((j == -1) || (j == 8) || (j == -10))){
                 continue;
             }
             if(locations.contains(i+j)){
@@ -127,6 +131,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
     // when mine is found
     private void gameOver(int i){
         stopwatch.stop();
+        minesweeper.getStartPanel().setSmiley(1);
         labels[i].setIcon(clicked_mine);
         for(int l:locations){
             if(l!=i){
@@ -138,24 +143,23 @@ public final class GamePanel extends JPanel  implements MouseListener {
         }
     }
     // check winning conditions
-    private boolean win(){
-
+    private void win(){
         if (flags == 0){
+            boolean won = false;
             for( int j = 0; j<81; j++){
                 if (!locations.contains(j) && labels[j].getIcon()== clickable){
-                    return false;
+                    won = true;
                 }
             }
-            stopwatch.stop();
-            for(int l:locations){
-                labels[l].setIcon(mine);
+            if(won){
+                minesweeper.getStartPanel().setSmiley(2);
+                stopwatch.stop();
+                for(int l:locations){
+                    labels[l].setIcon(mine);
+                }
             }
-            return true;
-        }
-        else{
-            return false;
-        }
 
+        }
     }
 
     public FlagPanel getFlagPanel() {
@@ -191,7 +195,6 @@ public final class GamePanel extends JPanel  implements MouseListener {
         else if(SwingUtilities.isRightMouseButton(e)){
             for(int i = 0; i < 81; i++) {
                 if (e.getSource() == labels[i]) {
-                    win();
                     if(!gamestarted){
                         stopwatch.start();
                         gamestarted  = true;
@@ -216,6 +219,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
                         if(!(flags <= 0)){
                             labels[i].setIcon(flag);
                             flags--;
+                            win();
                             String digits = Integer.toString(flags);
                             switch(digits.length()){
                                 case 2:

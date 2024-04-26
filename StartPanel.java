@@ -15,8 +15,10 @@ public class StartPanel extends JPanel implements MouseListener {
     JFrame frame;
     GamePanel game;
 
-    public StartPanel(JFrame frame,JPanel top, GamePanel game){
-            this.frame = frame;
+    MineSweeper minesweeper;
+    public StartPanel(MineSweeper minesweeper,JPanel top, GamePanel game){
+            this.minesweeper = minesweeper;
+            this.frame = minesweeper.getWindow();
             this.game = game;
             this.top = top;
             //panel setup
@@ -55,8 +57,11 @@ public class StartPanel extends JPanel implements MouseListener {
         if (e.getSource() == smiley) {
             frame.remove(game);
             frame.remove(top);
-            game = new GamePanel(frame);
-            top = new TopPanel(frame, game);
+            game = new GamePanel(minesweeper);
+            top = new TopPanel();
+            top.add(game.getFlagPanel());
+            top.add(minesweeper.getStartPanel());
+            top.add(game.getStopwatch());
             frame.add(game, BorderLayout.SOUTH);
             frame.add(top,BorderLayout.NORTH);
 
