@@ -98,7 +98,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
                         if ((i % 9) == 0 && (j == -1 || j == 8 || j == -10)) {
                             continue;
                         }
-                        if ((i + j) <= 80 && (i + j) >= 0) {
+                        if ((i + j) <= 80 && (i + j) >= 0 && labels[i+j].getIcon() == clickable) {
                             check(i + j);
                         }
                     }
