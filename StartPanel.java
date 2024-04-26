@@ -2,8 +2,6 @@ package MineSweeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -17,16 +15,16 @@ public class StartPanel extends JPanel implements MouseListener {
 
     MineSweeper minesweeper;
     public StartPanel(MineSweeper minesweeper){
-            this.minesweeper = minesweeper;
-            this.frame = minesweeper.getWindow();
-            this.game = minesweeper.getGame();
-            this.top = minesweeper.getTopPanel();
-            //panel setup
-            // start button icons
-            smile = new ImageIcon(new ImageIcon("images/smile.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-            sad = new ImageIcon(new ImageIcon("images/sad.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-            cool = new ImageIcon(new ImageIcon("images/cool.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-            smilepressed =  new ImageIcon(new ImageIcon("images/smilepressed.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        this.minesweeper = minesweeper;
+        this.frame = minesweeper.getWindow();
+        this.game = minesweeper.getGame();
+        this.top = minesweeper.getTopPanel();
+        //panel setup
+        // start button icons
+        smile = new ImageIcon(new ImageIcon("images/smile.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        sad = new ImageIcon(new ImageIcon("images/sad.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        cool = new ImageIcon(new ImageIcon("images/cool.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        smilepressed =  new ImageIcon(new ImageIcon("images/smilepressed.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 
 
         smiley = new JLabel();
@@ -37,6 +35,7 @@ public class StartPanel extends JPanel implements MouseListener {
             this.add(smiley);
 
     }
+    // setter
     public void setSmiley(int i){
         switch(i){
             case 0:
@@ -52,6 +51,7 @@ public class StartPanel extends JPanel implements MouseListener {
     }
 
 
+    // reset game
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == smiley) {

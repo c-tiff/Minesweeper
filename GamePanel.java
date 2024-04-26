@@ -61,7 +61,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
     }
     // generate mine positions
     public void genMines() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i <= 10; i++) {
             locations.add(rand.nextInt(81));
         }
     }
@@ -203,6 +203,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
         else if(SwingUtilities.isRightMouseButton(e)){
             for(int i = 0; i < 81; i++) {
                 if (e.getSource() == labels[i]) {
+                    win();
                     if(!gamestarted){
                         stopwatch.start();
                         gamestarted  = true;
