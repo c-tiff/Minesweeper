@@ -32,6 +32,9 @@ public class StopwatchPanel extends NumberPanel{
 
                 }
             }
+            else{
+                reset();
+            }
 
         }
     });
@@ -49,5 +52,14 @@ public class StopwatchPanel extends NumberPanel{
     }
     public void stop() {
         timer.stop();
+    }
+    public void reset(){
+        elapsedTime = 0;
+        seconds = 0;
+        time = "";
+        label1.setIcon(zero);
+        label2.setIcon(zero);
+        label3.setIcon(zero);
+
     }
 }
