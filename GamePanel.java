@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public final class GamePanel extends JPanel  implements MouseListener {
     private final ImageIcon flag, clickable, mine, clicked_mine,empty,one,two,three,four,five,six,seven,eight;
@@ -16,7 +17,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
     private final StopwatchPanel stopwatch;
     private final MineSweeper minesweeper;
 
-    private final ArrayList<Integer> locations =  new ArrayList<>(); // positions of mines
+    private final Set<Integer> locations; // positions of mines
     private final JLabel[] labels = new JLabel[81]; // tiles
     private final int[] surroundings = {-10,-9,-8,-1,1,8,9,10}; // to be summed to indexes to check the adjacent tiles
 
@@ -46,6 +47,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
         flagpanel = new FlagPanel();
         stopwatch = new StopwatchPanel();
         boolean gamestarted = false;
+        locations = new HashSet<>();
 
         // making the individual tiles
         for(int i = 0; i<81; i++){
@@ -61,7 +63,7 @@ public final class GamePanel extends JPanel  implements MouseListener {
     }
     // generate mine positions
     public void genMines() {
-        for (int i = 0; i <= 10; i++) {
+        while(locations.size()<10){
             locations.add(rand.nextInt(81));
         }
     }
