@@ -4,9 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class StopwatchPanel extends NumberPanel{
-    int elapsedTime,seconds;
-    String time;
-    Timer timer = new Timer(1000,new ActionListener(){
+    private int elapsedTime,seconds;
+    private String time;
+    private final Timer timer = new Timer(1000,new ActionListener(){
         public void actionPerformed(ActionEvent e){
             // what the timer does every 1000 millisecs ( 1 sec)
             if (seconds < 1000){

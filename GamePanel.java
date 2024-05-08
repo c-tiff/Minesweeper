@@ -188,15 +188,13 @@ public final class GamePanel extends JPanel  implements MouseListener {
         if(SwingUtilities.isLeftMouseButton(e)){
             for(int i = 0; i < 81; i++){
                 if(e.getSource() == labels[i]){
-                    win();
-                    gameOver(i);
                     if(!gamestarted){
                         stopwatch.start();
                         gamestarted  = true;
                 }
-                    else{
-                        check(i);
-                    }
+                    win();
+                    gameOver(i);
+                    check(i);
 
                 }
             }

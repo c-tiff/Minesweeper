@@ -6,14 +6,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class StartPanel extends JPanel implements MouseListener {
-    ImageIcon smilepressed, smile, sad, cool;
-    JLabel smiley;
+    private final ImageIcon smilepressed, smile, sad, cool;
+    private final JLabel smiley;
 
-    JPanel top;
-    JFrame frame;
-    GamePanel game;
+    private JPanel top;
+    private final JFrame frame;
+    private GamePanel game;
 
-    MineSweeper minesweeper;
+    private final MineSweeper minesweeper;
     public StartPanel(MineSweeper minesweeper){
         this.minesweeper = minesweeper;
         this.frame = minesweeper.getWindow();
